@@ -21,9 +21,9 @@ extern "C" {
     #include "cryptonight.h"
     #include "x13.h"
     #include "nist5.h"
-    #include "sha1.h",
+    #include "sha1.h"
     #include "x15.h"
-	#include "fresh.h"
+    #include "fresh.h"
 }
 
 #include "boolberry.h"
@@ -93,9 +93,9 @@ NAN_METHOD(scrypt) {
    if(!Buffer::HasInstance(target))
        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
     
-   Local<Number> numn = info[1]->ToNumber();
+   Local<Number> numn = info[1]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
    unsigned int nValue = numn->Value();
-   Local<Number> numr = info[2]->ToNumber();
+   Local<Number> numr = info[2]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
    unsigned int rValue = numr->Value();
    
    char * input = Buffer::Data(target);
@@ -123,7 +123,7 @@ NAN_METHOD(scryptn) {
    if(!Buffer::HasInstance(target))
        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
 
-   Local<Number> num = info[1]->ToNumber();
+   Local<Number> num = info[1]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
    unsigned int nFactor = num->Value();
 
    char * input = Buffer::Data(target);
@@ -153,16 +153,16 @@ NAN_METHOD(scryptjane) {
     if(!Buffer::HasInstance(target))
         return THROW_ERROR_EXCEPTION("First should be a buffer object.");
 
-    Local<Number> num = info[1]->ToNumber();
+    Local<Number> num = info[1]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
     int timestamp = num->Value();
 
-    Local<Number> num2 = info[2]->ToNumber();
+    Local<Number> num2 = info[2]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
     int nChainStartTime = num2->Value();
 
-    Local<Number> num3 = info[3]->ToNumber();
+    Local<Number> num3 = info[3]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
     int nMin = num3->Value();
 
-    Local<Number> num4 = info[4]->ToNumber();
+    Local<Number> num4 = info[4]->ToNumber(Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();;
     int nMax = num4->Value();
 
     char * input = Buffer::Data(target);
@@ -486,11 +486,14 @@ NAN_METHOD(boolberry) {
     if(!Buffer::HasInstance(target_spad))
         return THROW_ERROR_EXCEPTION("Argument 2 should be a buffer object.");
 
-    if(info.Length() >= 3)
-        if(info[2]->IsUint32())
+    if(info.Length() >= 3) {
+        if(info[2]->IsUint32()) {
             height = info[2]->ToUint32()->Uint32Value();
-        else
+	}
+        else {
             return THROW_ERROR_EXCEPTION("Argument 3 should be an unsigned integer.");
+        }
+    }
 
     char * input = Buffer::Data(target);
     char * scratchpad = Buffer::Data(target_spad);
